@@ -25,11 +25,11 @@ export const sortTable = (
     } else if (byColumn === "TYPE") {
       comparison = compareStrings(a["type"], b["type"]);
     } else if (byColumn === "STATUS") {
-      comparison = compareStatus(a["status"], b["status"]);
+      comparison = order === 'ASC' ? compareStatus(a["status"], b["status"]) : compareStatus(b["status"], a["status"]);
     } else if (byColumn === "SITE") {
       comparison = compareStrings(a["site"], b["site"]);
     }
-
+    
     return order === "ASC" ? comparison : -comparison;
   });
 };

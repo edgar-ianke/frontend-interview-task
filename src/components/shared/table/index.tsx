@@ -29,31 +29,35 @@ type Props = {
 const Table = ({ data }: Props) => {
   const [filteredData, setFilteredData] = useState<Props["data"]>([]);
   const [search, setSearch] = useState("");
-  const [sortSettings, setSortSettings] = useState({ ASC: true, col: "TYPE" });
+  const [sortSettings, setSortSettings] = useState<{
+    ASC: boolean;
+    col: null | string;
+  }>({ ASC: true, col: null });
+
   useEffect(() => {
     const filtered = data.filter((item) =>
       item.name.toLowerCase().includes(search.toLowerCase().trim())
     );
     setFilteredData(filtered);
   }, [search, data]);
+
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
   const handleSort =
     (ASC: boolean, col: "NAME" | "TYPE" | "STATUS" | "SITE") => () => {
-      if (sortSettings.col !== col) {
-        setSortSettings({ ASC: true, col });
-      } else {
-        setSortSettings({ ASC, col });
-      }
-      const sortedData = sortTable(filteredData, ASC ? "ASC" : "DESC", col);
+      const isSameCol = sortSettings.col === col;
+      const newSortOrder = isSameCol ? !sortSettings.ASC : true;
+      setSortSettings({ ASC: newSortOrder, col });
+      const sortedData = sortTable(filteredData, newSortOrder ? "ASC" : "DESC", col);
       setFilteredData(sortedData);
     };
 
   const resetSearch = () => {
     setSearch("");
   };
+
   return (
     <>
       <div className={s.search}>
@@ -143,7 +147,10 @@ const Table = ({ data }: Props) => {
                 <td className={statusClasses[row.status]}>{row.status}</td>
                 <td className={s.siteTd}>{row.site}</td>
                 <td>
-                  <Link to={`/${row.action.toLowerCase()}/${row.id}`} state={{name: row.name}}>
+                  <Link
+                    to={`/${row.action.toLowerCase()}/${row.id}`}
+                    state={{ name: row.name }}
+                  >
                     <button
                       className={`${s.action} ${actionClasses[row.action]}`}
                     >
