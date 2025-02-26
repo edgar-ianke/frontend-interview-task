@@ -1,0 +1,12 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    cursor: pointer;
+}
+.button {
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 18px;
+    
+}
